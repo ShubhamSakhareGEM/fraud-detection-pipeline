@@ -1,9 +1,8 @@
 # Real-Time Event-Driven Fraud Detection Pipeline
 
 ![Fraud Detection Dashboard](./dashboard/UI_demo.png) 
-*(Note: Replace the image path with your actual screenshot file once uploaded to the repo)*
 
-**Live Demo:** [[https://fraud-detection-pipeline-one.vercel.app](https://fraud-detection-pipeline-one.vercel.app)](https://fraud-detection-pipeline-one.vercel.app/)
+**Live Demo:** [https://fraud-detection-pipeline-one.vercel.app](https://fraud-detection-pipeline-one.vercel.app)
 
 ## Inspiration
 
