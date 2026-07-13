@@ -1,6 +1,24 @@
 import json, os,joblib,warnings,ssl
 from kafka import KafkaConsumer, KafkaProducer
 
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class DummyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"ML Engine is awake and listening to Kafka!")
+
+def start_dummy_server():
+    # Render assigns a port dynamically via the PORT env var (defaults to 10000)
+    port = int(os.environ.get('PORT', 10000))
+    server = HTTPServer(('0.0.0.0', port), DummyHandler)
+    server.serve_forever()
+
+# Start the web server in a background thread so it doesn't block your Kafka code
+threading.Thread(target=start_dummy_server, daemon=True).start()
+
 warnings.filterwarnings("ignore",category=UserWarning)
 
 MODEL_PATH=os.path.join(os.path.dirname(__file__),'fraud_model.pkl')
