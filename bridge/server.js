@@ -1,46 +1,45 @@
-const express= require('express');
+const express=require('express');
 const http=require('http');
 const { Server }= require('socket.io');
 const { Kafka }= require('kafkajs');
-
 const cors=require('cors');
-const app= express();
+
+const app = express();
 app.use(cors());
-const new_io = require('socket.io')(server, {
-  cors: {
-    origin: "*", // Allows your Vercel frontend to connect
+const server = http.createServer(app);
+
+
+
+const io = new Server(server, {
+  cors: { 
+    origin: "*", 
     methods: ["GET", "POST"]
   }
 });
 
-const server=http.createServer(app);
-const io=new Server(server, {
-  cors: { origin: '*' } 
-});
-
-//Kafka Connection
-const kafka= new Kafka({
+//Kafka connection
+const kafka = new Kafka({
   clientId: 'ingestion-api',
   brokers: ['kafka-1256c67c-shubhamsakharegem-7fb2.j.aivencloud.com:21539'], 
   ssl: {
     rejectUnauthorized: false 
   },
   sasl: {
-    mechanism: 'scram-sha-256', 
+    mechanism: 'plain',
     username: process.env.KAFKA_USERNAME,
     password: process.env.KAFKA_PASSWORD
   }
 });
 
 //consumer
-const consumer= kafka.consumer({ groupId: 'react-dashboard-group' });
+const consumer = kafka.consumer({ groupId: 'react-dashboard-group' });
 
-const startBridge= async () => {
+const startBridge = async () => {
   try {
     await consumer.connect();
     console.log('Bridge successfully connected to Aiven Kafka!');
     
-    // Listen to the alerts topic
+    //listen to the alerts topic
     await consumer.subscribe({ topic: 'fraud-alerts', fromBeginning: true });
     
     await consumer.run({
@@ -48,7 +47,7 @@ const startBridge= async () => {
         const alert = JSON.parse(message.value.toString());
         console.log(`Pushing to UI: ${alert.transactionId} | Prob: ${alert.fraudProbability}%`);
         
-        //broqdcasting via WebSockets to React
+        //broadcasting via WebSockets to React
         io.emit('fraudAlert', alert);
       },
     });
