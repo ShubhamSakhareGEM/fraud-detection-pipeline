@@ -6,7 +6,7 @@ const { Kafka }= require('kafkajs');
 const cors=require('cors');
 const app= express();
 app.use(cors());
-const io = require('socket.io')(server, {
+const new_io = require('socket.io')(server, {
   cors: {
     origin: "*", // Allows your Vercel frontend to connect
     methods: ["GET", "POST"]
