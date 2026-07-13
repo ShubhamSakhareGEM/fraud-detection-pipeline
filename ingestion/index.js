@@ -3,6 +3,8 @@ const {Kafka}=require('kafkajs');
 
 const app= express();
 app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 
 const kafka=new Kafka({
   clientId: 'ingestion-api',
@@ -43,7 +45,7 @@ app.post('/api/transactions', async (req, res) => {
       messages: [{ value: JSON.stringify(tx) }],
     });
     
-    
+
     res.status(202).json({ status: 'accepted', transactionId: tx.id });
   } catch (error) {
     console.error('Error sending transaction:', error);
