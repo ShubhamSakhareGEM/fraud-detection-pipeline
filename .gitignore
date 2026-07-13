@@ -1,0 +1,15 @@
+**/.env
+k8s/secrets.yaml
+
+# Node.js Dependencies
+**/node_modules/
+**/package-lock.json
+
+# Python Caches & Environments
+**/__pycache__/
+**/*.pyc
+**/.venv/
+**/venv/
+
+# macOS System Files
+**/.DS_Store

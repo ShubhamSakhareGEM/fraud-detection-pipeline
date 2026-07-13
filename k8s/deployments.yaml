@@ -1,0 +1,80 @@
+#ingestion
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: ingestion }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: ingestion } }
+  template:
+    metadata: { labels: { app: ingestion } }
+    spec:
+      containers:
+      - name: ingestion
+        image: ssak01/fraud-ingestion:latest
+        ports: [{ containerPort: 3000 }]
+        envFrom: [{ secretRef: { name: fraud-secrets } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: ingestion-service }
+spec:
+  type: LoadBalancer
+  selector: { app: ingestion }
+  ports: [{ port: 80, targetPort: 3000 }]
+
+#enrichment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: enrichment }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: enrichment } }
+  template:
+    metadata: { labels: { app: enrichment } }
+    spec:
+      containers:
+      - name: enrichment
+        image: ssak01/fraud-enrichment:latest
+        envFrom: [{ secretRef: { name: fraud-secrets } }]
+
+#inference
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: inference }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: inference } }
+  template:
+    metadata: { labels: { app: inference } }
+    spec:
+      containers:
+      - name: inference
+        image: ssak01/fraud-inference:latest
+        envFrom: [{ secretRef: { name: fraud-secrets } }]
+
+#bridge
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: bridge }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: bridge } }
+  template:
+    metadata: { labels: { app: bridge } }
+    spec:
+      containers:
+      - name: bridge
+        image: ssak01/fraud-bridge:latest
+        ports: [{ containerPort: 4000 }]
+        envFrom: [{ secretRef: { name: fraud-secrets } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: bridge-service }
+spec:
+  type: LoadBalancer
+  selector: { app: bridge }
+  ports: [{ port: 4000, targetPort: 4000 }]

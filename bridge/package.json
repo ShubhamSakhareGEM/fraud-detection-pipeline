@@ -1,0 +1,8 @@
+{
+  "name": "bridge",
+  "dependencies": {
+    "express": "^5.2.1",
+    "kafkajs": "^2.2.4",
+    "socket.io": "^4.8.3"
+  }
+}
