@@ -120,7 +120,7 @@ export default function App() {
       }
 
       try {
-        await fetch('https://fraud-detection-pipeline-llor.onrender.com', {
+        await fetch('https://fraud-detection-pipeline-llor.onrender.com/api/transactions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
