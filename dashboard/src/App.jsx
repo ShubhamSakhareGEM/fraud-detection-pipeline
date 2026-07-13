@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const socketUrl = import.meta.env.VITE_WS_URL || 'http://localhost:4000';
+const socketUrl = 'https://fraud-detection-pipeline-1-0b9g.onrender.com';
 const socket = io(socketUrl);
 
 const CustomDot = (props) => {
@@ -120,7 +120,7 @@ export default function App() {
       }
 
       try {
-        await fetch('/api/transactions', {
+        await fetch('https://fraud-detection-pipeline-llor.onrender.com', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
